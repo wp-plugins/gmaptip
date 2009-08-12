@@ -1,4 +1,4 @@
-=== InfoLink ===
+=== gMapTip ===
 Contributors: Sirlon
 Tags: google maps, map, google, maps, tooltip
 Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7198162
