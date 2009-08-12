@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Add gMap Tooltip</title>
+<script type="text/javascript" src="../../../wp-includes/js/tinymce/tiny_mce_popup.js?ver=3241-1141"></script>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" src="window.js"></script>
+
+</head>
+<body onload="initialize()" onunload="GUnload()">
+<form>
+<label>Link Text: <input id="gmt_linktext" name="gmt_linktext" type="text" /></label><br />
+<label><span style="color:#F00">*</span>Search Text: <input id="gmt_searchtext" name="gmt_searchtext" type="text" /></label><br />
+<label>Lat:<input id="gmt_lat" name="gmt_lat" type="text" style="width:56px" readonly="readonly" /></label>
+<label>Long:<input id="gmt_long" name="gmt_long" type="text" style="width:56px" readonly="readonly" /></label>
+<label>Zoom:<input id="gmt_zoom" name="gmt_zoom" type="text" style="width:24px" maxlength="2" readonly="readonly" /></label>
+<input type="hidden" id="gmt_mt" name="gmt_mt" value="" />
+<input type="button" value="Set Position" title="Set Current Map Position" onclick="setpos();" /><br />
+<label> Auto <input type="checkbox" id="gmt_auto" name="gmt_auto" title="Set the Position to the Viewers Current Position. (only with FF3.5, Chrome or any browser with Google Gears installed.)" value="1" /></label><br />
+<input type="submit" id="insert" name="insert"  value="Insert" onclick="insert_tip();" />
+<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
+</form>
+<p><span style="color:#F00">*</span> Search Text is not required, if not set the Link text would be taken.</p>
+<div id="map" style="width:390px;height:275px;margin-top:5px;"></div>
+
+</body>
+</html>
