@@ -3,7 +3,7 @@
 Plugin Name: gMapTip
 Plugin URI: http://www.gnomx.at/gmaptip
 Description: You can select a word and search google map POIs and add a tooltip to your text showing the map. 
-Version: 1.0
+Version: 1.1
 Author: Sirlon
 Author URI: http://www.gnomx.at
 
@@ -31,7 +31,7 @@ Author URI: http://www.gnomx.at
     along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define( 'GMT_VERSION', '1.0' );
+define( 'GMT_VERSION', '1.1' );
 
 if ( ! defined( 'GMT_PLUGIN_DIR' ) )
 	define( 'GMT_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . plugin_basename( dirname( __FILE__ ) ) );
@@ -92,8 +92,6 @@ function gmt_addstyle()
 		background:#FFF;
 		border:solid 1px #CCC;
 		position:absolute;
-		margin-top:-268px;
-		margin-left:5px;
 	}
 
 	#gmt_map {

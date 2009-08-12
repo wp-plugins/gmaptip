@@ -4,7 +4,7 @@ Tags: google maps, map, google, maps, tooltip
 Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7198162
 Requires at least: 2.8
 Tested up to: 2.8.4
-Stable tag: 1.0
+Stable tag: 1.1
 
 Add Google Maps Tooltips to your Posts & Pages.
 
@@ -37,6 +37,9 @@ There is another Option to add a Tooltip which shows a specific Point you chose.
 2. The Button.
 
 == Changelog ==
+= 1.1 =
+* Fixed Tooltip position
+* 2 minor bug fixes
 
 = 1.0 =
 * Inital Release.

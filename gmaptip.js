@@ -23,7 +23,7 @@
 google.load("maps", "2");
 google.load("elements", "1", {packages : ["localsearch"]});
 
-
+var map;
 
 jQuery(document).ready(function($) {
 			
@@ -37,8 +37,11 @@ jQuery(document).ready(function($) {
 												 shown = true;
 												 mins = true;
 												
-											  $(this).append('<div class="gmt_tip" id="gmt_map"></div>');
+											  $(this).prepend('<div class="gmt_tip" id="gmt_map"></div>');
 											  var s = $(this).text();
+											  var th = $('div:first',this).height();
+											  $('div',this).css("top", (e.pageY - (th+10))+"px");
+											  $('div',this).css("left", (e.pageX + 3)+"px");
 											  var lopt = s.split(':');
 											  var gmtype = lopt[0].replace(' ', '');
 											  var place = lopt[1];
@@ -54,12 +57,12 @@ jQuery(document).ready(function($) {
 											   
 											  $('div:hidden',this).fadeIn("slow", function(){
 																						    
-																					
+																							
 																							d = this;
 																							var mopt = {
 																								backgroundColor: $(this).css("background-color"),
 																								};
-																							var map = new GMap2(this, mopt);
+																							map = new GMap2(this, mopt);
 																							map.enableScrollWheelZoom();
 																							
 																							var blueIcon = new GIcon(G_DEFAULT_ICON);
@@ -184,13 +187,14 @@ jQuery(document).ready(function($) {
 			$('.gmt_link').mouseout(function(e){
 											 if(shown){
 											 
-											 
+											 if(typeof map != undefined){
 											t1 = setTimeout(function(){ 
 											  $('div:visible',d).fadeOut("slow", function(){
 																			shown = false;
 																			
 																			$(d).remove();
-																			});}, 500);
+																			});}, 500); 
+											 }
 											  
 											 }
 										
