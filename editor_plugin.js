@@ -120,7 +120,7 @@
 					ed.windowManager.open({
 					url : t.url+'/window.html',
    					width : 450,
-   					height : 450,
+   					height : 475,
 					inline: 1
 				}, {
    					url : t.url,

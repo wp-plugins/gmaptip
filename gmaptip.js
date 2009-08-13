@@ -20,22 +20,182 @@
     along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-google.load("maps", "2");
-google.load("elements", "1", {packages : ["localsearch"]});
+//google.load("maps", "2");
+//google.load("elements", "1", {packages : ["localsearch"]});
 
+var gLocalSearch;
 var map;
+var gInfoWindow;
+    var gSelectedResults = [];
+    var gCurrentResults = [];
+    var gSearchForm;
+
+// Create our "tiny" marker icon
+    var gYellowIcon = new google.maps.MarkerImage(
+      "http://labs.google.com/ridefinder/images/mm_20_yellow.png",
+      new google.maps.Size(12, 20),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(6, 20));
+    var gRedIcon = new google.maps.MarkerImage(
+      "http://labs.google.com/ridefinder/images/mm_20_red.png",
+      new google.maps.Size(12, 20),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(6, 20));
+    var gSmallShadow = new google.maps.MarkerImage(
+      "http://labs.google.com/ridefinder/images/mm_20_shadow.png",
+      new google.maps.Size(22, 20),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(6, 20));
 
 jQuery(document).ready(function($) {
 			
 			var shown = false;
-			var mins = false;
-			var t1, d;
+			var t1;
+			
+		function makemap(div, latlng, zoom, mt, ls){
+			
+			var mopt = {
+						zoom: zoom,
+						center: latlng,
+						mapTypeId: mt,
+						disableDefaultUI: true,
+						navigationControl: true,
+						navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+						backgroundColor: $(div).css("background-color"),
+					};
+					
+					var m = new google.maps.Map(div, mopt);
+					
+					if(typeof ls != 'undefined')
+						google.maps.event.addListener(m, 'tilesloaded', function(){
+																						doSearch(ls);	
+																						
+																					 });
+			return m;
+			
+		}
+			
+		gInfoWindow = new google.maps.InfoWindow;
+      google.maps.event.addListener(gInfoWindow, 'closeclick', function() {
+        unselectMarkers();
+      });
+			
+		gLocalSearch = new GlocalSearch();
+      	gLocalSearch.setSearchCompleteCallback(null, OnLocalSearch);
+		
+		function unselectMarkers() {
+      for (var i = 0; i < gCurrentResults.length; i++) {
+        gCurrentResults[i].unselect();
+      }
+    }
+		
+		
+	function doSearch(query) {
+      gLocalSearch.setCenterPoint(map.get_center());
+      gLocalSearch.execute(query);
+    }
 	
-			$('.gmt_link').mouseover(function(e){
+	function OnLocalSearch() {
+      if (!gLocalSearch.results) return;
+
+      // Clear the map and the old search well
+      for (var i = 0; i < gCurrentResults.length; i++) {
+       // if (!gCurrentResults[i].selected()) {
+          gCurrentResults[i].marker().set_map(null);
+        //}
+      }
+
+      gCurrentResults = [];
+      for (var i = 0; i < gLocalSearch.results.length; i++) {
+        gCurrentResults.push(new LocalResult(gLocalSearch.results[i]));
+      }
+
+      // Move the map to the first result
+      var first = gLocalSearch.results[0];
+      map.set_center(new google.maps.LatLng(parseFloat(first.lat),
+                                             parseFloat(first.lng)));
+
+    }
+	
+	   // A class representing a single Local Search result returned by the
+    // Google AJAX Search API.
+    function LocalResult(result) {
+      var me = this;
+      me.result_ = result;
+      me.resultNode_ = me.node();
+      me.marker_ = me.marker();
+      google.maps.event.addDomListener(me.resultNode_, 'mouseover', function() {
+        // Highlight the marker and result icon when the result is
+        // mouseovered.  Do not remove any other highlighting at this time.
+        me.highlight(true);
+      });
+      google.maps.event.addDomListener(me.resultNode_, 'mouseout', function() {
+        // Remove highlighting unless this marker is selected (the info
+        // window is open).
+        if (!me.selected_) me.highlight(false);
+      });
+      google.maps.event.addDomListener(me.resultNode_, 'click', function() {
+        me.select();
+      });
+      
+    }
+
+    LocalResult.prototype.node = function() {
+      if (this.resultNode_) return this.resultNode_;
+      return this.html();
+    };
+
+    // Returns the GMap marker for this result, creating it with the given
+    // icon if it has not already been created.
+    LocalResult.prototype.marker = function() {
+      var me = this;
+      if (me.marker_) return me.marker_;
+      var marker = me.marker_ = new google.maps.Marker({
+        position: new google.maps.LatLng(parseFloat(me.result_.lat),
+                                         parseFloat(me.result_.lng)),
+        icon: gYellowIcon, shadow: gSmallShadow, map: map});
+      google.maps.event.addListener(marker, "click", function() {
+        me.select();
+      });
+      return marker;
+    };
+
+    // Unselect any selected markers and then highlight this result and
+    // display the info window on it.
+    LocalResult.prototype.select = function() {
+      unselectMarkers();
+      this.selected_ = true;
+      this.highlight(true);
+      gInfoWindow.set_content(this.html(true));
+      gInfoWindow.open(map, this.marker());
+    };
+
+    // Remove any highlighting on this result.
+    LocalResult.prototype.unselect = function() {
+      this.selected_ = false;
+      this.highlight(false);
+    };
+
+    // Returns the HTML we display for a result before it has been "saved"
+    LocalResult.prototype.html = function() {
+      var me = this;
+      var container = document.createElement("div");
+      container.className = "unselected";
+      container.appendChild(me.result_.html.cloneNode(true));
+      return container;
+    }
+
+    LocalResult.prototype.highlight = function(highlight) {
+      this.marker().setOptions({icon: highlight ? gRedIcon : gYellowIcon});
+      this.node().className = "unselected" + (highlight ? " red" : "");
+    }
+    
+	
+			$('.gmt_link').hover(function(e){
 											  clearTimeout(t1);
 											 if(!shown){
 												 shown = true;
-												 mins = true;
+												 
 												
 											  $(this).prepend('<div class="gmt_tip" id="gmt_map"></div>');
 											  var s = $(this).text();
@@ -55,74 +215,72 @@ jQuery(document).ready(function($) {
 												 }
 												  
 											   
-											  $('div:hidden',this).fadeIn("slow", function(){
+											  $('#gmt_map:hidden').fadeIn("slow", function(){
 																						    
 																							
-																							d = this;
-																							var mopt = {
-																								backgroundColor: $(this).css("background-color"),
-																								};
-																							map = new GMap2(this, mopt);
-																							map.enableScrollWheelZoom();
-																							
-																							var blueIcon = new GIcon(G_DEFAULT_ICON);
-																							blueIcon.image = "http://gmaps-samples.googlecode.com/svn/trunk/markers/blue/blank.png";
-																							
-																							var hmo = {
-																									title : 'Home',
-																									icon : blueIcon,
-																								};
+																
+																						
 																								
 																						if(gmtype == 'ls'){
 																							
-																							var options = {
-																								searchFormHint: q,
-																								resultList: 'suppress'
-																							}
-													
-																							var lsc = new google.elements.LocalSearch(options);
-																							map.addControl(lsc);
-																							$('.gels', this).hide();
-																							
-																							GEvent.addListener(map, "load", function() {
-  																								setTimeout(function(){
-																							
-																							$(':submit',d).click();
-																								}, 500);
-																							});
-																								
-																							if (navigator.geolocation && place == 'home') {  
+																				if (navigator.geolocation && place == 'home') {  
+																					
 																							function showPosition(position) {
 																							
-    																								 map.setCenter(new GLatLng(position.coords.latitude, position.coords.longitude), 13);
-    																								map.addOverlay(new GMarker(new GLatLng(position.coords.latitude, position.coords.longitude), hmo));
+    																								map = makemap(document.getElementById('gmt_map'),new google.maps.LatLng(position.coords.latitude, position.coords.longitude),13,'roadmap', q);																		
+																									var hmark = new google.maps.Marker({
+																																	   position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+																																	   title: 'Home',
+																																	   map: map
+																																	   });
+																									
   																									} 
   																								function report(error){
     																							alert(error.message);
   																								}
 																								navigator.geolocation.getCurrentPosition(showPosition, report);
 																							} else if (typeof(google.gears) != "undefined"  && place == 'home') {
-																								var geo = google.gears.factory.create('beta.geolocation');
+																								
+																								
 
   																								function updatePosition(position) {
-																									 
-   																									  map.setCenter(new GLatLng(position.latitude, position.longitude), 13);
-    																								  map.addOverlay(new GMarker(new GLatLng(position.latitude, position.longitude), hmo));
- 																								 }
+																									 	
+   																									  map = makemap(document.getElementById('gmt_map'),new google.maps.LatLng(position.latitude, position.longitude), 13, 'roadmap', q);
+																									 var hmark = new google.maps.Marker({
+																																	   position: new google.maps.LatLng(position.latitude, position.longitude),
+																																	   title: 'Home',
+																																	   map: map
+																																	   });
+    																							 }
 																								function handleError(error) {
     																								alert(error.message);
  																								 }
+																								   try {
+																									   alert('miau');
+																								 var geolocation = google.gears.factory.create('beta.geolocation');
+																								 geolocation.getCurrentPosition(updatePosition, handleError, { enableHighAccuracy: true, gearsRequestAddress: true });
+																								  } catch (e) {
+    alert('Error using Geolocation API: ' + e.message);
+    return;
+  }
 
-
-    																								geo.getCurrentPosition(updatePosition, handleError);
   
 																							} else {
 																								
 																								if(typeof(lonlng[3]) != 'undefined')
 																									q = lonlng[3];
-																								map.setCenter(new GLatLng( lonlng[0], lonlng[1]), parseInt(lonlng[2]));
+																									
+																								if(google.loader.ClientLocation && place == 'home')
+																								map = makemap(document.getElementById('gmt_map'),new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude), 13, 'roadmap', q);
+																								else
+																								map = makemap(document.getElementById('gmt_map'),new google.maps.LatLng( lonlng[0], lonlng[1]), parseInt(lonlng[2]), 'roadmap', q);
+																								
 																							
 																							}
+																							
+																							
+																						
+																							
 								
 																							
 																							} else if(gmtype == 'ma'){
@@ -131,8 +289,12 @@ jQuery(document).ready(function($) {
 																									
 																									function showPosition(position) {
 																							
-    																									map.setCenter(new GLatLng(position.coords.latitude, position.coords.longitude), 13);
-    																									map.addOverlay(new GMarker(new GLatLng(position.coords.latitude, position.coords.longitude), hmo));
+    																									map = makemap(this, new google.maps.LatLng(position.coords.latitude, position.coords.longitude), 13, 'roadmap');
+    																									var hmark = new google.maps.Marker({
+																																	   position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+																																	   title: 'Home',
+																																	   map: map
+																																	   });
   																									} 
   																									
 																									function report(error){
@@ -147,8 +309,12 @@ jQuery(document).ready(function($) {
 
   																								function updatePosition(position) {
 																									 
-   																									  map.setCenter(new GLatLng(position.latitude, position.longitude), 13);
-    																								  map.addOverlay(new GMarker(new GLatLng(position.latitude, position.longitude), hmo));
+   																									  map = makemap(this, new google.maps.LatLng(position.coords.latitude, position.coords.longitude),13, 'roadmap');
+    																								var hmark = new google.maps.Marker({
+																																	   position: new google.maps.LatLng(position.coords.latitude, position.coords.longitude),
+																																	   title: 'Home',
+																																	   map: map
+																																	   });
  																								 }
 																								 
 																								function handleError(error) {
@@ -161,20 +327,18 @@ jQuery(document).ready(function($) {
   
 																							} else {
 																								
-																								
-																								map.setCenter(new GLatLng( lonlng[0], lonlng[1]), parseInt(lonlng[2]));
-																								map.addOverlay(new GMarker(new GLatLng(lonlng[0], lonlng[1]), hmo));
-																							
+																								if(google.loader.ClientLocation && place == 'home'){
+																								map = makemap(document.getElementById('gmt_map'),new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude), 13, 'roadmap');
+																							}else {
+																								map = makemap(this,new google.maps.LatLng( lonlng[0], lonlng[1]), parseInt(lonlng[2]), lonlng[3]);
+								
+																								var hmark = new google.maps.Marker({
+																																	   position: new google.maps.LatLng( lonlng[0], lonlng[1]),
+																																	   map: map
+																																	   });
+																								}
 																							}
-																							if(lonlng[3] == 'Hybrid'){
-																								var mt = G_HYBRID_MAP;
-																							} else if(lonlng[3] == 'Satellite'){
-																								var mt = G_SATELLITE_MAP;
-																							} else {
-																								var mat = G_NORMAL_MAP;
-																							}
-																							
-																							map.setMapType(mt);
+											
 																								
 																							}
 																						   });
@@ -183,21 +347,15 @@ jQuery(document).ready(function($) {
 												
 											  }
 											  
-									});
-			$('.gmt_link').mouseout(function(e){
-											 if(shown){
-											 
-											 if(typeof map != undefined){
-											t1 = setTimeout(function(){ 
-											  $('div:visible',d).fadeOut("slow", function(){
+									},function(e){
+										if(typeof(map) != "undefined"){
+										t1 = setTimeout(function(){ 
+											  $('#gmt_map:visible').fadeOut("slow", function(){
 																			shown = false;
 																			
-																			$(d).remove();
-																			});}, 500); 
-											 }
-											  
-											 }
-										
-											  });
-			$('body').unload(GUnload());
+																			$('#gmt_map').remove();
+																			});}, 300); 
+										}
+										});
+		
 								})

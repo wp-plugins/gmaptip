@@ -3,7 +3,7 @@
 Plugin Name: gMapTip
 Plugin URI: http://www.gnomx.at/gmaptip
 Description: You can select a word and search google map POIs and add a tooltip to your text showing the map. 
-Version: 1.1
+Version: 1.2
 Author: Sirlon
 Author URI: http://www.gnomx.at
 
@@ -31,7 +31,7 @@ Author URI: http://www.gnomx.at
     along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define( 'GMT_VERSION', '1.1' );
+define( 'GMT_VERSION', '1.2' );
 
 if ( ! defined( 'GMT_PLUGIN_DIR' ) )
 	define( 'GMT_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . plugin_basename( dirname( __FILE__ ) ) );
@@ -67,7 +67,8 @@ function gmt_addJS()
 	
 	if(!empty($key)) $key = "?key=".$key;
 	
-	wp_enqueue_script('googleapi','http://www.google.com/jsapi'.$key);
+	wp_enqueue_script('googlmaps3','http://maps.google.com/maps/api/js?sensor=false');
+	wp_enqueue_script('googlls','http://www.google.com/uds/api?file=uds.js&amp;v=1.0&amp;');
 	wp_enqueue_script('googlegears',GMT_PLUGIN_URL.'/gears_init.js');
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('gmaptip',GMT_PLUGIN_URL.'/gmaptip.js',array('jquery'));
@@ -102,7 +103,7 @@ function gmt_addstyle()
 }
 
 //Create Options
-
+/*
 function gmt_addoptions()
 {
 	add_options_page("gMapTip", "gMapTip", 8, __FILE__, "gmt_options_page");
@@ -145,7 +146,7 @@ function gmt_options_page()
     </div>
     <?php
 }
-
+*/
 // Register Editor Button
 function gmt_addbutton()
 {

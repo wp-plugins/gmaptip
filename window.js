@@ -19,36 +19,64 @@
     You should have received a copy of the GNU General Public License
     along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
 */
-	google.load("maps", "2");
+
 	
 	var map;
+	var geocoder;
 	var type = tinyMCEPopup.getWindowArg('maptype');
 	
 	function initialize() {
 		var ed = tinyMCEPopup.editor;
-		if (GBrowserIsCompatible()) {
-        map = new GMap2(document.getElementById("map"));
-		map.addControl(new GSmallZoomControl);
-		map.enableGoogleBar();
-        map.setCenter(new GLatLng(37.4419, -122.1419), 13);
+			var mtc =  false;
+			if(type != 'ls_custom'){
+			document.getElementById('gmt_searchtext').style.display = "none";
+			document.getElementById('gmt_stl').style.display = "none";
+			document.getElementById('gmt_sth').style.display = "none";
+			mtc = true;
+		}
+		var mo = {
+			zoom: 8,
+			center: new google.maps.LatLng(-34.397, 150.644),
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			mapTypeControl: true,
+    		mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+			navigationControl: mtc,
+			navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL}
+			};
+        map = new google.maps.Map(document.getElementById("map"), mo);
+		geocoder = new google.maps.Geocoder();
+		
+    
 		document.getElementById('gmt_linktext').value = ed.selection.getContent();
 		
-		if(type != 'ls_custom'){
-			document.getElementById('gmt_searchtext').style.display = "none";
-			map.addControl(new GMenuMapTypeControl);
-		}
 		
-      }
+		
+    
 	}
+
+  function geocode() {
+    var address = document.getElementById("address").value;
+    geocoder.geocode({
+      'address': address,
+      'partialmatch': true}, geocodeResult);
+  }
+
+  function geocodeResult(results, status) {
+    if (status == 'OK' && results.length > 0) {
+      map.fitBounds(results[0].geometry.viewport);
+    } else {
+      alert("Search was not successful for the following reason: " + status);
+    }
+  }
 	
 function setpos(){
-	var latlng = map.getCenter();
-	var zoom = map.getZoom();
-	var mapt = map.getCurrentMapType();
+	var latlng = map.get_center();
+	var zoom = map.get_zoom();
+	var mapt = map.get_mapTypeId();
 	document.getElementById('gmt_lat').value = latlng.lat();
 	document.getElementById('gmt_long').value = latlng.lng();
 	document.getElementById('gmt_zoom').value = zoom;
-	document.getElementById('gmt_mt').value = mapt.getName();
+	document.getElementById('gmt_mt').value = mapt;
 }
 
 function insert_tip() {
