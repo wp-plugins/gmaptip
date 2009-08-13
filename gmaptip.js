@@ -30,22 +30,7 @@ var gInfoWindow;
     var gCurrentResults = [];
     var gSearchForm;
 
-// Create our "tiny" marker icon
-    var gYellowIcon = new google.maps.MarkerImage(
-      "http://labs.google.com/ridefinder/images/mm_20_yellow.png",
-      new google.maps.Size(12, 20),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(6, 20));
-    var gRedIcon = new google.maps.MarkerImage(
-      "http://labs.google.com/ridefinder/images/mm_20_red.png",
-      new google.maps.Size(12, 20),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(6, 20));
-    var gSmallShadow = new google.maps.MarkerImage(
-      "http://labs.google.com/ridefinder/images/mm_20_shadow.png",
-      new google.maps.Size(22, 20),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(6, 20));
+var gYellowIcon, gRedIcon, gSmallShadow;
 
 jQuery(document).ready(function($) {
 			
@@ -53,6 +38,23 @@ jQuery(document).ready(function($) {
 			var t1;
 			
 		function makemap(div, latlng, zoom, mt, ls){
+			
+			// Create our "tiny" marker icon
+     gYellowIcon = new google.maps.MarkerImage(
+      "http://labs.google.com/ridefinder/images/mm_20_yellow.png",
+      new google.maps.Size(12, 20),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(6, 20));
+     gRedIcon = new google.maps.MarkerImage(
+      "http://labs.google.com/ridefinder/images/mm_20_red.png",
+      new google.maps.Size(12, 20),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(6, 20));
+     gSmallShadow = new google.maps.MarkerImage(
+      "http://labs.google.com/ridefinder/images/mm_20_shadow.png",
+      new google.maps.Size(22, 20),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(6, 20));
 			
 			var mopt = {
 						zoom: zoom,
@@ -66,11 +68,14 @@ jQuery(document).ready(function($) {
 					
 					var m = new google.maps.Map(div, mopt);
 					
-					if(typeof ls != 'undefined')
+					if(typeof(ls) != 'undefined'){
+						
 						google.maps.event.addListener(m, 'tilesloaded', function(){
+																				 
 																						doSearch(ls);	
 																						
 																					 });
+					}
 			return m;
 			
 		}
@@ -99,11 +104,11 @@ jQuery(document).ready(function($) {
       if (!gLocalSearch.results) return;
 
       // Clear the map and the old search well
-      for (var i = 0; i < gCurrentResults.length; i++) {
+  /*    for (var i = 0; i < gCurrentResults.length; i++) {
        // if (!gCurrentResults[i].selected()) {
           gCurrentResults[i].marker().set_map(null);
         //}
-      }
+      }*/
 
       gCurrentResults = [];
       for (var i = 0; i < gLocalSearch.results.length; i++) {
@@ -199,6 +204,7 @@ jQuery(document).ready(function($) {
 												
 											  $(this).prepend('<div class="gmt_tip" id="gmt_map"></div>');
 											  var s = $(this).text();
+											  
 											  var th = $('div:first',this).height();
 											  $('div',this).css("top", (e.pageY - (th+10))+"px");
 											  $('div',this).css("left", (e.pageX + 3)+"px");
@@ -255,15 +261,9 @@ jQuery(document).ready(function($) {
 																								function handleError(error) {
     																								alert(error.message);
  																								 }
-																								   try {
-																									   alert('miau');
 																								 var geolocation = google.gears.factory.create('beta.geolocation');
 																								 geolocation.getCurrentPosition(updatePosition, handleError, { enableHighAccuracy: true, gearsRequestAddress: true });
-																								  } catch (e) {
-    alert('Error using Geolocation API: ' + e.message);
-    return;
-  }
-
+																								 
   
 																							} else {
 																								
@@ -352,7 +352,7 @@ jQuery(document).ready(function($) {
 										t1 = setTimeout(function(){ 
 											  $('#gmt_map:visible').fadeOut("slow", function(){
 																			shown = false;
-																			
+																			google.maps.event.clearInstanceListeners(map);
 																			$('#gmt_map').remove();
 																			});}, 300); 
 										}
