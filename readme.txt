@@ -4,7 +4,7 @@ Tags: google maps, map, google, maps, tooltip
 Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7198162
 Requires at least: 2.8
 Tested up to: 2.8.4
-Stable tag: 1.2
+Stable tag: 1.3
 
 Add Google Maps Tooltips to your Posts & Pages.
 
