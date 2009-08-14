@@ -3,7 +3,7 @@
 Plugin Name: gMapTip
 Plugin URI: http://www.gnomx.at/gmaptip
 Description: You can select a word and search google map POIs and add a tooltip to your text showing the map. 
-Version: 1.2
+Version: 1.3
 Author: Sirlon
 Author URI: http://www.gnomx.at
 
@@ -31,7 +31,7 @@ Author URI: http://www.gnomx.at
     along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define( 'GMT_VERSION', '1.2' );
+define( 'GMT_VERSION', '1.3' );
 
 if ( ! defined( 'GMT_PLUGIN_DIR' ) )
 	define( 'GMT_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . plugin_basename( dirname( __FILE__ ) ) );
@@ -155,7 +155,7 @@ function gmt_options_page()
 	}
 	
 	$f_link_border = explode(' ', $style['link-border']);
-	$f_hover_border = explode(' ', $style['hover-border']);
+	$f_hover_border = explode(' ', $style['link-hover-border']);
 	$f_tooltip_border = explode(' ', $style['tooltip-border']);
 	
 	
@@ -264,7 +264,7 @@ function gmt_options_page()
     <p>
     <h3>Text hovered Style</h3>
     <label>Text Color:
-      <input type="text" name="gmt_hover_color" id="gmt_hover_color" class="gmt_colorp" style="width:125px" maxlength="7" value="<?php echo $style['hover-color']; ?>" />
+      <input type="text" name="gmt_hover_color" id="gmt_hover_color" class="gmt_colorp" style="width:125px" maxlength="7" value="<?php echo $style['link-hover-color']; ?>" />
     </label>
     <br />
     <label>Underline Type:
@@ -321,7 +321,8 @@ function gmt_options_page()
     </p>
   </form>
   <hr />
-  <p><small>For more Information about this Plug-in visit my <a href="www.gnomx.at/gmaptip" title="gMapTip Site">Site</a>.</small></p>
+  <p>The only necessary Fields are thw <b>with</b> and <b>height</b> of the Tooltip, if you didn't want to style it, let it blank.</p>
+  <p><small>For more Information about this Plug-in visit my <a href="www.gnomx.at/gmaptip" title="gMapTip Site">Site</a>. Or want to try my other Plugins ? <a href="http://www.gnomx.at/mlang/" title="LAnguge switcher Plugin">mLanguge</a>, <a href="http://www.gnomx.at/infolink/" title="Quikly link Wiki, IMDB or Google search results.">InfoLink</a> </small></p>
   </p>
 </div>
 <?php

@@ -68,11 +68,11 @@ jQuery(document).ready(function($) {
 					
 					if(typeof(ls) != 'undefined'){
 						
-						google.maps.event.addListener(m, 'tilesloaded', function(){
+						//google.maps.event.addListener(m, 'tilesloaded', function(){
 																				 
-																						doSearch(ls);	
+																						setTimeout(function(){doSearch(ls);},1200);
 																						
-																					 });
+																					// });
 					}
 			return m;
 			

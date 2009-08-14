@@ -33,6 +33,10 @@ There is another Option to add a Tooltip which shows a specific Point you chose.
 2. The Button.
 
 == Changelog ==
+= 1.3 =
+* Added styling Options, you can add some own style to the Tip.
+* Have done a nasty fix for the problem that the local search markers didn't show up when hover a second time over the link.
+
 = 1.2 =
 * Completely rewritten it with Google Maps API v3 it should now run on nearly all browsers.
 * Because it's v3, you didn't need a api key any longer.
