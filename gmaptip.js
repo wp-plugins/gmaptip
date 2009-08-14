@@ -20,8 +20,6 @@
     along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//google.load("maps", "2");
-//google.load("elements", "1", {packages : ["localsearch"]});
 
 var gLocalSearch;
 var map;
@@ -202,7 +200,7 @@ jQuery(document).ready(function($) {
 												 shown = true;
 												 
 												
-											  $(this).prepend('<div class="gmt_tip" id="gmt_map"></div>');
+											  $(this).prepend('<div id="gmt_map"></div>');
 											  var s = $(this).text();
 											  
 											  var th = $('div:first',this).height();
@@ -356,6 +354,7 @@ jQuery(document).ready(function($) {
 																			$('#gmt_map').remove();
 																			});}, 300); 
 										}
-										});
-		
-								})
+			
+			});
+								});
+
