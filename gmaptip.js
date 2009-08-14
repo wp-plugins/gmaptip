@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
 			
 		function makemap(div, latlng, zoom, mt, ls){
 			
-			// Create our "tiny" marker icon
+		
      gYellowIcon = new google.maps.MarkerImage(
       "http://labs.google.com/ridefinder/images/mm_20_yellow.png",
       new google.maps.Size(12, 20),
@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
 						disableDefaultUI: true,
 						navigationControl: true,
 						navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-						backgroundColor: $(div).css("background-color"),
+						backgroundColor: $(div).css("background-color")
 					};
 					
 					var m = new google.maps.Map(div, mopt);
@@ -113,28 +113,25 @@ jQuery(document).ready(function($) {
         gCurrentResults.push(new LocalResult(gLocalSearch.results[i]));
       }
 
-      // Move the map to the first result
+    
       var first = gLocalSearch.results[0];
       map.set_center(new google.maps.LatLng(parseFloat(first.lat),
                                              parseFloat(first.lng)));
 
     }
 	
-	   // A class representing a single Local Search result returned by the
-    // Google AJAX Search API.
+	
     function LocalResult(result) {
       var me = this;
       me.result_ = result;
       me.resultNode_ = me.node();
       me.marker_ = me.marker();
       google.maps.event.addDomListener(me.resultNode_, 'mouseover', function() {
-        // Highlight the marker and result icon when the result is
-        // mouseovered.  Do not remove any other highlighting at this time.
+
         me.highlight(true);
       });
       google.maps.event.addDomListener(me.resultNode_, 'mouseout', function() {
-        // Remove highlighting unless this marker is selected (the info
-        // window is open).
+
         if (!me.selected_) me.highlight(false);
       });
       google.maps.event.addDomListener(me.resultNode_, 'click', function() {
@@ -148,8 +145,7 @@ jQuery(document).ready(function($) {
       return this.html();
     };
 
-    // Returns the GMap marker for this result, creating it with the given
-    // icon if it has not already been created.
+
     LocalResult.prototype.marker = function() {
       var me = this;
       if (me.marker_) return me.marker_;
@@ -163,8 +159,7 @@ jQuery(document).ready(function($) {
       return marker;
     };
 
-    // Unselect any selected markers and then highlight this result and
-    // display the info window on it.
+
     LocalResult.prototype.select = function() {
       unselectMarkers();
       this.selected_ = true;
@@ -173,13 +168,13 @@ jQuery(document).ready(function($) {
       gInfoWindow.open(map, this.marker());
     };
 
-    // Remove any highlighting on this result.
+
     LocalResult.prototype.unselect = function() {
       this.selected_ = false;
       this.highlight(false);
     };
 
-    // Returns the HTML we display for a result before it has been "saved"
+
     LocalResult.prototype.html = function() {
       var me = this;
       var container = document.createElement("div");

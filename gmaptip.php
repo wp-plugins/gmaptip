@@ -3,7 +3,7 @@
 Plugin Name: gMapTip
 Plugin URI: http://www.gnomx.at/gmaptip
 Description: You can select a word and search google map POIs and add a tooltip to your text showing the map. 
-Version: 1.3
+Version: 1.3.1
 Author: Sirlon
 Author URI: http://www.gnomx.at
 

@@ -4,7 +4,7 @@ Tags: google maps, map, google, maps, tooltip
 Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7198162
 Requires at least: 2.8
 Tested up to: 2.8.4
-Stable tag: 1.3
+Stable tag: 1.3.1
 
 Add Google Maps Tooltips to your Posts & Pages.
 
@@ -33,6 +33,9 @@ There is another Option to add a Tooltip which shows a specific Point you chose.
 2. The Button.
 
 == Changelog ==
+= 1.3.1 =
+* Fixed IE Issue, should now work with Internet Explorer to (damn ",").
+
 = 1.3 =
 * Added styling Options, you can add some own style to the Tip.
 * Have done a nasty fix for the problem that the local search markers didn't show up when hover a second time over the link.
