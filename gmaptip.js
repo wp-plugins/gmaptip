@@ -238,26 +238,6 @@ jQuery(document).ready(function($) {
     																							alert(error.message);
   																								}
 																								navigator.geolocation.getCurrentPosition(showPosition, report);
-																							} else if (typeof(google.gears) != "undefined"  && place == 'home') {
-																								
-																								
-
-  																								function updatePosition(position) {
-																									 	
-   																									  map = makemap(document.getElementById('gmt_map'),new google.maps.LatLng(position.latitude, position.longitude), 13, 'roadmap', q);
-																									 var hmark = new google.maps.Marker({
-																																	   position: new google.maps.LatLng(position.latitude, position.longitude),
-																																	   title: 'Home',
-																																	   map: map
-																																	   });
-    																							 }
-																								function handleError(error) {
-    																								alert(error.message);
- 																								 }
-																								 var geolocation = google.gears.factory.create('beta.geolocation');
-																								 geolocation.getCurrentPosition(updatePosition, handleError, { enableHighAccuracy: true, gearsRequestAddress: true });
-																								 
-  
 																							} else {
 																								
 																								if(typeof(lonlng[3]) != 'undefined')
