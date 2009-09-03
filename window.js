@@ -1,0 +1,230 @@
+	/*  
+	Copyright
+	----------
+	
+	gMapTip©2009 by Gnomx.at.
+	
+    This file is part of gMapTip.
+
+    gMapTip is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    gMapTip is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+	
+	var map;
+	var geocoder;
+	var type = tinyMCEPopup.getWindowArg('maptype');
+	var mtid = google.maps.MapTypeId.ROADMAP;
+	var mzoom = 8;
+	var mpos = new google.maps.LatLng(-34.397, 150.644);
+	var lsc = false;
+	
+	function initialize() {
+		var ed = tinyMCEPopup.editor;
+			var mtc =  false;
+			if(type == 'ls_auto' || type == 'normal_map'){
+			document.getElementById('gmt_searchtext').style.display = "none";
+			document.getElementById('gmt_stl').style.display = "none";
+			document.getElementById('gmt_sth').style.display = "none";
+			mtc = true;
+		} else if( type == 'edit') {
+			var element = ed.selection.getNode();
+			var vars = element.firstChild.lastChild.data.split(':');
+			var mvar;
+			document.getElementsByName('insert')[0].value = 'Update';
+			
+			if(vars[0] == 'ls' && vars[1] == 'auto'){
+				
+				document.getElementById('gmt_auto').checked = 'checked';
+			
+			}else if(vars[0] == 'ls'){
+				mvar = vars[1].split('//');
+				lsc = true;
+				if(mvar[0] == 'auto'){
+					document.getElementById('gmt_auto').checked = 'checked';
+				
+				if(mvar[1] == 'roadmap')
+					mtid = google.maps.MapTypeId.ROADMAP;
+				else if(mvar[1] == 'satellite') 
+					mtid = google.maps.MapTypeId.SATELLITE;
+				else if(mvar[1] == 'hybrid')
+					mtid = google.maps.MapTypeId.HYBRID;
+				else if(mvar[1] == 'terrain') 
+					mtid = google.maps.MapTypeId.TERRAIN;
+				else 
+					document.getElementById('gmt_searchtext').value = mvar[1];
+					
+				}else {
+					
+					document.getElementById('gmt_lat').value = mvar[0];
+					document.getElementById('gmt_long').value = mvar[1];
+					document.getElementById('gmt_zoom').value = mvar[2];
+					document.getElementById('gmt_searchtext').value = mvar[3];
+					
+					mzoom = parseInt(mvar[2].replace(' ',''));
+					mpos = new google.maps.LatLng(mvar[0], mvar[1]);
+					
+				}
+					
+				
+				
+			} else {
+				
+				document.getElementById('gmt_searchtext').style.display = "none";
+			document.getElementById('gmt_stl').style.display = "none";
+			document.getElementById('gmt_sth').style.display = "none";
+			mtc = true;
+				
+				mvar = vars[1].split('//');
+				
+				if(mvar[0] == 'auto'){
+					document.getElementById('gmt_auto').checked = 'checked';
+				
+				if(mvar[1] == 'roadmap')
+					mtid = google.maps.MapTypeId.ROADMAP;
+				else if(mvar[1] == 'satellite') 
+					mtid = google.maps.MapTypeId.SATELLITE;
+				else if(mvar[1] == 'hybrid')
+					mtid = google.maps.MapTypeId.HYBRID;
+				else 
+					mtid = google.maps.MapTypeId.TERRAIN;
+					
+				}else {
+					
+					document.getElementById('gmt_lat').value = mvar[0];
+					document.getElementById('gmt_long').value = mvar[1];
+					document.getElementById('gmt_zoom').value = mvar[2];
+					document.getElementById('gmt_mt').value = mvar[3];
+					
+					if(mvar[3] == 'roadmap')
+						mtid = google.maps.MapTypeId.ROADMAP;
+					else if(mvar[3] == 'satellite') 
+						mtid = google.maps.MapTypeId.SATELLITE;
+					else if(mvar[3] == 'hybrid')
+						mtid = google.maps.MapTypeId.HYBRID;
+					else 
+						mtid = google.maps.MapTypeId.TERRAIN;
+						
+					mzoom = parseInt(mvar[2].replace(' ',''));
+					mpos = new google.maps.LatLng(mvar[0], mvar[1]);
+						
+					
+				}
+				
+			}
+		}
+		
+		var mo = {
+			zoom: mzoom,
+			center: mpos,
+			mapTypeId: mtid,
+			mapTypeControl: true,
+    		mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+			navigationControl: mtc,
+			navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL}
+			};
+        map = new google.maps.Map(document.getElementById("map"), mo);
+		geocoder = new google.maps.Geocoder();
+		
+    
+		document.getElementById('gmt_linktext').value = ed.selection.getContent();
+		
+}	
+
+
+  function geocode() {
+    var address = document.getElementById("address").value;
+    geocoder.geocode({
+      'address': address,
+      'partialmatch': true}, geocodeResult);
+  }
+
+  function geocodeResult(results, status) {
+    if (status == 'OK' && results.length > 0) {
+      map.fitBounds(results[0].geometry.viewport);
+    } else {
+      alert("Search was not successful for the following reason: " + status);
+    }
+  }
+	
+function setpos(){
+	var latlng = map.get_center();
+	var zoom = map.get_zoom();
+	var mapt = map.get_mapTypeId();
+	document.getElementById('gmt_lat').value = latlng.lat();
+	document.getElementById('gmt_long').value = latlng.lng();
+	document.getElementById('gmt_zoom').value = zoom;
+	document.getElementById('gmt_mt').value = mapt;
+}
+
+function insert_tip() {
+	var ed = tinyMCEPopup.editor;
+	var lt = document.getElementById('gmt_linktext').value;
+	var st = document.getElementById('gmt_searchtext').value;
+	var lat = document.getElementById('gmt_lat').value;
+	var lng = document.getElementById('gmt_long').value;
+	var zoom = document.getElementById('gmt_zoom').value;
+	var auto = document.getElementById('gmt_auto').checked;
+	var mt = document.getElementById('gmt_mt').value;
+	
+	if(lt != ''){
+	if(auto){
+		if(type == 'ls_custom' || lsc == true){
+		if(st != '')
+			var os = "ls:auto//"+st+":";
+		else
+			var os = "ls:auto:";
+		} else {
+			var os = "ma:auto//"+mt+":";	
+		}
+		
+		if(type == 'edit'){
+			var nspan = document.createElement('SPAN');
+			nspan.style.display = 'none';
+			nspan.innerHTML = os;
+			ed.selection.getNode().replaceChild(nspan, ed.selection.getNode().firstChild);
+			var nlt = document.createTextNode(lt);
+			ed.selection.getNode().replaceChild(nlt, ed.selection.getNode().lastChild);
+		}else
+			ed.selection.setContent('<a href=\"JavaScript:void(null)\" class=\"gmt_link\"><span style=\"display:none\" >'+os+'</span>'+lt+'</a>');
+		tinyMCEPopup.close();
+	} else {
+		if(lat != '' && lng != '' && zoom != ''){
+			if(type == 'ls_custom' || lsc == true){
+		if(st != '')
+			var os = "ls:"+lat+"//"+lng+"//"+zoom+"//"+st+":";
+		else
+			var os = "ls:"+lat+"//"+lng+"//"+zoom+":";
+			} else {
+				var os = "ma:"+lat+"//"+lng+"//"+zoom+"//"+mt+":";
+			}
+		
+		if(type == 'edit'){
+			var nspan = document.createElement('SPAN');
+			nspan.style.display = 'none';
+			nspan.innerHTML = os;
+			ed.selection.getNode().replaceChild(nspan, ed.selection.getNode().firstChild);
+			var nlt = document.createTextNode(lt);
+			ed.selection.getNode().replaceChild(nlt, ed.selection.getNode().lastChild);
+		}else
+			ed.selection.setContent('<a href=\"JavaScript:void(null)\" class=\"gmt_link\"><span style=\"display:none\" >'+os+'</span>'+lt+'</a>');
+			
+		tinyMCEPopup.close();
+		} else {
+			ed.windowManager.alert('Please insert Coordinates or check "Auto"');
+		}
+	}
+	} else {
+		ed.windowManager.alert('Please insert a Link Text.');
+	}
+}
