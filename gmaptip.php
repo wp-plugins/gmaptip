@@ -3,7 +3,7 @@
 Plugin Name: gMapTip
 Plugin URI: http://www.gnomx.at/gmaptip
 Description: You can select a word and search google map POIs and add a tooltip to your text showing the map. 
-Version: 1.3.3
+Version: 1.3.5
 Author: Sirlon
 Author URI: http://www.gnomx.at
 
@@ -31,7 +31,7 @@ Author URI: http://www.gnomx.at
     along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define( 'GMT_VERSION', '1.3.3' );
+define( 'GMT_VERSION', '1.3.5' );
 
 if ( ! defined( 'GMT_PLUGIN_DIR' ) )
 	define( 'GMT_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . plugin_basename( dirname( __FILE__ ) ) );
@@ -334,10 +334,10 @@ function gmt_addbutton()
 	if ( ! current_user_can('edit_posts') && ! current_user_can('edit_pages') )
      return;
  
-   if ( get_user_option('rich_editing') == 'true') {
+   //if ( get_user_option('rich_editing') == 'true') {
     	add_filter("mce_external_plugins", "add_gmt_tinymce_plugin");
      	add_filter("mce_buttons", "register_gmt_button");
-   }	
+  // }	
 }
 
 function register_gmt_button($buttons) 
@@ -355,6 +355,7 @@ function add_gmt_tinymce_plugin($plugin_array) {
 
 add_action('init','gmt_addJS');
 add_action('wp_head','gmt_addstyle');
+add_action('admin_head','gmt_addstyle');
 add_action('admin_enqueue_scripts', 'gmt_admin_head');
 add_action('admin_menu',"gmt_addoptions");
 add_action('init', 'gmt_addbutton');

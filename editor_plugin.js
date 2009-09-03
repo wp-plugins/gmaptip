@@ -109,11 +109,18 @@
 				
 				function addmap(o, t){
 					var ed = t.editor;
+					var se = ed.selection.getNode();
+					
+					
+					
+					if(se.nodeName == 'A' && se.getAttribute('class') == 'gmt_link')
+						o = 'edit';
+						
 					if(o == 'ls_auto'){
 						if(ed.selection.getContent() == ''){
 							ed.windowManager.alert('Nothing Selected! Please use the Custom Local Search Option or select a Text to search.');
 						} else {
-						ed.selection.setContent('[gmt ls:auto:]'+ed.selection.getContent()+'[/gmt]');
+						ed.selection.setContent('<a href=\"JavaScript:void(null)\" class=\"gmt_link\"><span style=\"display:none\" >ls:auto:</span>'+ed.selection.getContent()+'</a>');
 						}
 					} else {
 						

@@ -199,8 +199,9 @@ jQuery(document).ready(function($) {
 											  var s = $(this).text();
 											  
 											  var th = $('div:first',this).height();
-											  $('div',this).css("top", (e.pageY - (th+10))+"px");
-											  $('div',this).css("left", (e.pageX + 3)+"px");
+											  var tt = $('div', this).parent();
+											  $('div',this).css("top", ((tt.position().top - th) - 2)+"px");
+											  $('div',this).css("left", (tt.position().left + 15)+"px");
 											  var lopt = s.split(':');
 											  var gmtype = lopt[0].replace(' ', '');
 											  var place = lopt[1];

@@ -4,7 +4,7 @@ Tags: google maps, map, google, maps, tooltip
 Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7198162
 Requires at least: 2.8
 Tested up to: 2.8.4
-Stable tag: 1.3.3
+Stable tag: 1.3.5
 
 Add Google Maps Tooltips to your Posts & Pages.
 
@@ -25,6 +25,14 @@ For more information visit: http://www.gnomx.at/gmaptip
 Select a word and click the button or click "Quick Local Search" in the menu. This Option will automatically add a local search Tooltip to the Word. (e.g.. "Starbucks" - will search all Starbucks Shops in the viewers city.)
 You can also Customize Local Search by clicking "Custom Local Search" where you can show everyone where to find a Starbucks somewhere else around the world.
 
+If you didn't use the Rich Text editor or any other Editor you can add a Map Tip by this Tag:
+`[gmt MAPLINKTYPE:MAPOPTIONS: ] Link Text [/gmt]«
+
+MAPLINKTYPE - For Local Searche you use 'ls', for any other 'ma'.
+
+MAPOPTIONS - For a Map showing the Viewers Location use 'auto' e.g.: `ls:auto:« or with a Search value different to the Linktext e.g.: 'ls:auto//Searchtext:'.
+	- Otherwise it looks like this: 'ma:Latitude//Longitude//Zoom//MapType:' e.g.: `ls:53.4338464//-37.4566//12//hybride«.
+
 There is another Option to add a Tooltip which shows a specific Point you chose.
 
 == Screenshots ==
@@ -33,6 +41,10 @@ There is another Option to add a Tooltip which shows a specific Point you chose.
 2. The Button.
 
 == Changelog ==
+= 1.3.5 =
+* Changed Editor functions, it looks now like a Link and you can now edit already inserted Links.
+* Changed Tooltip Anchoring to fix some issues with some Themes.
+
 = 1.3.3 =
 * Fixed a Problem with Safari and Google Gears installed, where the auto Mode didn't worked.
 
