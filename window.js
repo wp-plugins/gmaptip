@@ -158,9 +158,9 @@
   }
 	
 function setpos(){
-	var latlng = map.get_center();
-	var zoom = map.get_zoom();
-	var mapt = map.get_mapTypeId();
+	var latlng = map.getCenter();
+	var zoom = map.getZoom();
+	var mapt = map.getMapTypeId();
 	document.getElementById('gmt_lat').value = latlng.lat();
 	document.getElementById('gmt_long').value = latlng.lng();
 	document.getElementById('gmt_zoom').value = zoom;
