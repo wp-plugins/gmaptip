@@ -78,7 +78,8 @@ jQuery(document).ready(function($) {
 			
 		}
 			
-		gInfoWindow = new google.maps.InfoWindow;
+		gInfoWindow = new google.maps.InfoWindow({content: 'WTF'});
+		
       google.maps.event.addListener(gInfoWindow, 'closeclick', function() {
         unselectMarkers();
       });
@@ -94,7 +95,7 @@ jQuery(document).ready(function($) {
 		
 		
 	function doSearch(query) {
-      gLocalSearch.setCenterPoint(map.get_center());
+      gLocalSearch.setCenterPoint(map.getCenter());
       gLocalSearch.execute(query);
     }
 	
@@ -102,12 +103,12 @@ jQuery(document).ready(function($) {
       if (!gLocalSearch.results) return;
 
       // Clear the map and the old search well
-  /*    for (var i = 0; i < gCurrentResults.length; i++) {
-       // if (!gCurrentResults[i].selected()) {
-          gCurrentResults[i].marker().set_map(null);
+      for (var i = 0; i < gCurrentResults.length; i++) {
+       //if (!gCurrentResults[i].selected()) {
+          gCurrentResults[i].marker().setMap(null);
         //}
-      }*/
-
+	  }
+	  
       gCurrentResults = [];
       for (var i = 0; i < gLocalSearch.results.length; i++) {
         gCurrentResults.push(new LocalResult(gLocalSearch.results[i]));
@@ -115,7 +116,7 @@ jQuery(document).ready(function($) {
 
     
       var first = gLocalSearch.results[0];
-      map.set_center(new google.maps.LatLng(parseFloat(first.lat),
+      map.setCenter(new google.maps.LatLng(parseFloat(first.lat),
                                              parseFloat(first.lng)));
 
     }
@@ -164,7 +165,7 @@ jQuery(document).ready(function($) {
       unselectMarkers();
       this.selected_ = true;
       this.highlight(true);
-      gInfoWindow.set_content(this.html(true));
+      gInfoWindow.setContent(this.html(true));
       gInfoWindow.open(map, this.marker());
     };
 
@@ -198,10 +199,10 @@ jQuery(document).ready(function($) {
 											  $(this).prepend('<div id="gmt_map"></div>');
 											  var s = $(this).text();
 											  
-											  var th = $('div:first',this).height();
-											  var tt = $('div', this).parent();
-											  $('div',this).css("top", ((tt.position().top - th) - 2)+"px");
-											  $('div',this).css("left", (tt.position().left + 15)+"px");
+											  var th = $('div#gmt_map',this).height();
+											  var tt = $('#gmt_map', this).parent();
+											  $('#gmt_map', this).css("top", ((tt.position().top - th) - 2)+"px");
+											  $('#gmt_map', this).css("left", (tt.position().left + 15)+"px");
 											  var lopt = s.split(':');
 											  var gmtype = lopt[0].replace(' ', '');
 											  var place = lopt[1];
