@@ -3,7 +3,7 @@
 Plugin Name: gMapTip
 Plugin URI: http://www.gnomx.at/gmaptip
 Description: You can select a word and search google map POIs and add a tooltip to your text showing the map. 
-Version: 1.3.6
+Version: 1.5
 Author: Sirlon
 Author URI: http://www.gnomx.at
 
@@ -31,7 +31,7 @@ Author URI: http://www.gnomx.at
     along with gMapTip.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-define( 'GMT_VERSION', '1.3.6' );
+define( 'GMT_VERSION', '1.5' );
 
 if ( ! defined( 'GMT_PLUGIN_DIR' ) )
 	define( 'GMT_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . plugin_basename( dirname( __FILE__ ) ) );
@@ -79,7 +79,7 @@ function gmt_addJS()
 	
 	wp_enqueue_script('googlmaps3','http://maps.google.com/maps/api/js?sensor=false');
 	wp_enqueue_script('googlls','http://www.google.com/uds/api?file=uds.js&amp;v=1.0&amp;');
-	wp_enqueue_script('googlegears',GMT_PLUGIN_URL.'/gears_init.js');
+	wp_enqueue_script('googlegears','http://code.google.com/apis/gears/gears_init.js');
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('gmaptip',GMT_PLUGIN_URL.'/gmaptip.js',array('jquery'));
 
@@ -121,18 +121,30 @@ function gmt_addstyle()
 	$stylesheet .="	text-decoration:none;\n
 	}
 	
-	#gmt_map {\n";
+	#gmt_tip {\n";
 	$stylesheet .= "height: ".$style['tooltip-height'].";\n";
 	$stylesheet .= "width: ".$style['tooltip-width'].";\n";
 	if(!empty($style['tooltip-bgcolor']))
 	$stylesheet .= "background-color: ".$style['tooltip-bgcolor'].";\n";
 	if(!empty($style['tooltip-border']))
 	$stylesheet .= "border: ".$style['tooltip-border'].";\n";
-	$stylesheet .= "position:absolute;\n
+	$stylesheet .= "position:absolute; \n
 	display:none;\n
 	font-size: 10px;\n
 	color:black;\n
 	}\n
+	
+	.gmt_Info {
+		position:absolute; \n
+		background-color:white; \n
+		border: 1px solid #111; \n
+		padding: 5px; \n
+		margin: 30px auto 0 auto;
+		-moz-border-radius: 6px; 
+		-webkit-border-radius: 6px; \n
+		z-index:5; \n
+		opacity: 0.9;
+	}
 	
 	#gmt_map a {
 		color:black;\n
@@ -299,7 +311,7 @@ function gmt_options_page()
     <label>Width:
       <input type="text" name="gmt_tooltip_width" id="gmt_tooltip_width" style="width:150px" maxlength="6" value="<?php echo $style['tooltip-width']; ?>" />
     </label>
-    <label>Width:
+    <label>Height:
       <input type="text" name="gmt_tooltip_height" id="gmt_tooltip_height" style="width:150px" maxlength="6" value="<?php echo $style['tooltip-height']; ?>" />
     </label>
     <br />

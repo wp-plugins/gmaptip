@@ -3,8 +3,8 @@ Contributors: Sirlon
 Tags: google maps, map, google, maps, tooltip
 Donate Link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7198162
 Requires at least: 2.8
-Tested up to: 2.8.4
-Stable tag: 1.3.6
+Tested up to: 2.9.2
+Stable tag: 1.5
 
 Add Google Maps Tooltips to your Posts & Pages.
 
@@ -31,7 +31,7 @@ If you didn't use the Rich Text editor or any other Editor you can add a Map Tip
 MAPLINKTYPE - For Local Searche you use 'ls', for any other 'ma'.
 
 MAPOPTIONS - For a Map showing the Viewers Location use 'auto' e.g.: `ls:auto:« or with a Search value different to the Linktext e.g.: 'ls:auto//Searchtext:'.
-	- Otherwise it looks like this: 'ma:Latitude//Longitude//Zoom//MapType:' e.g.: `ls:53.4338464//-37.4566//12//hybride«.
+	- Otherwise it looks like this: 'ma:Latitude//Longitude//Zoom//MapType:' e.g.: `ls:53.4338464//-37.4566//12//hybride:MarkStrings«.
 
 There is another Option to add a Tooltip which shows a specific Point you chose.
 
@@ -41,8 +41,13 @@ There is another Option to add a Tooltip which shows a specific Point you chose.
 2. The Button.
 
 == Changelog ==
+= 1.5 =
+* Reworked a lot of it, didn't want to bump to 2.0.
+* You can now Set Marks, just click on the map and a window will pop up. With options for lat/lng, title and you can define your own marker image.
+* Added More UI to the output Map, you can now switch the Mat Types.
+
 = 1.3.5 =
-*Small Google Maps API Update.
+* Small Google Maps API Update.
 
 = 1.3.5 =
 * Changed Editor functions, it looks now like a Link and you can now edit already inserted Links.

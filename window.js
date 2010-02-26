@@ -28,10 +28,73 @@
 	var mzoom = 8;
 	var mpos = new google.maps.LatLng(-34.397, 150.644);
 	var lsc = false;
+	var Amarks = new Array();
+	var MarkersA = new Array();
 	
+	function pluginP() {
+	var p;
+	var fname = 'gmaptip_admin.js';
+	var e = document.getElementsByTagName('script');
+	
+		for(i=0; i< e.length; i++){
+			var s = e[i].src.search(fname);
+			if (s != -1) {
+				p = e[i].src.substring(0,e[i].src.lastIndexOf("/") + 1);
+				break;
+			}
+		}
+	return p;
+}
+
+function openAddMWin(location) {
+	var lat = location.lat();
+	var lng = location.lng();
+	document.getElementById('gmt_addmark_lat').value = lat;
+	document.getElementById('gmt_addmark_lng').value = lng;
+	jQuery('#gmt_addMarkW').fadeIn();
+}
+
+function clearMarks() {
+	for(e=0;e<MarkersA.length;e++){
+		MarkersA[e].setMap(null);
+	}
+	Amarks = [];
+}
+	
+function addMark() {
+	var lat = document.getElementById('gmt_addmark_lat').value;
+	var lng = document.getElementById('gmt_addmark_lng').value;
+	var mtitle = document.getElementById('gmt_addmark_title').value;
+	var mimg = document.getElementById('gmt_addmark_img').value;
+	var markstring = lat+'/+/'+lng;
+	
+	if(mtitle != '')
+		markstring = markstring+'/+/'+mtitle;
+	
+	if(mimg != ''){
+		if(mimg.substr(0,7) == 'http://')
+			mimg = mimg.substr(7);
+			
+		markstring = markstring+'/+/'+mimg;
+	}else{
+		mimg = 'marker.png';
+	}
+	Amarks.push(markstring);
+	var marker = new google.maps.Marker({
+      																position: new google.maps.LatLng(parseFloat(lat), parseFloat(lng)), 
+      																map: map,
+																	icon: mimg,
+      																title:mtitle
+				});  
+	MarkersA.push(marker);
+	  	jQuery('#gmt_addMarkW').fadeOut();	
+	
+}
 	function initialize() {
 		var ed = tinyMCEPopup.editor;
+		Amarks = [];
 			var mtc =  false;
+			var marks;
 			if(type == 'ls_auto' || type == 'normal_map'){
 			document.getElementById('gmt_searchtext').style.display = "none";
 			document.getElementById('gmt_stl').style.display = "none";
@@ -42,6 +105,9 @@
 			var vars = element.firstChild.lastChild.data.split(':');
 			var mvar;
 			document.getElementsByName('insert')[0].value = 'Update';
+			if(vars[2]) {
+						 marks = vars[2].split('**');
+						}
 			
 			if(vars[0] == 'ls' && vars[1] == 'auto'){
 				
@@ -136,8 +202,37 @@
         map = new google.maps.Map(document.getElementById("map"), mo);
 		geocoder = new google.maps.Geocoder();
 		
+		//Set Marks 
+		var pluginPath = pluginP();
+															  if(marks){
+															  for(mcount=0;mcount< marks.length; mcount++){
+																  Amarks.push(marks[mcount]);
+																  var mark = marks[mcount].split('/+/');
+																  var mlatlng = new google.maps.LatLng(mark[0], mark[1]);
+																  var mimage;
+																  
+																  if(mark[3]){
+																	   	mimage = 'http://'+mark[3];
+																	   if(mimage.substr(0,7) != 'http://')
+																	  		mimage = 'http://'+mimage;
+																	}else {
+																	  	mimage = 'marker.png';
+																	  }
+																  var marker = new google.maps.Marker({
+      																position: mlatlng, 
+      																map: map,
+																	icon: mimage,
+      																title:mark[2]
+  																});  
+																  MarkersA.push(marker);
+															  }}
+		
     
 		document.getElementById('gmt_linktext').value = ed.selection.getContent();
+		
+		google.maps.event.addListener(map, 'click', function(event) {
+    openAddMWin(event.latLng);
+  });
 		
 }	
 
@@ -176,6 +271,13 @@ function insert_tip() {
 	var zoom = document.getElementById('gmt_zoom').value;
 	var auto = document.getElementById('gmt_auto').checked;
 	var mt = document.getElementById('gmt_mt').value;
+	var ms;
+	
+	if(Amarks.length > 0)
+		ms = Amarks.join('**');
+		
+	if(typeof(ms) == 'undefined')
+		ms = '';
 	
 	if(lt != ''){
 	if(auto){
@@ -202,11 +304,11 @@ function insert_tip() {
 		if(lat != '' && lng != '' && zoom != ''){
 			if(type == 'ls_custom' || lsc == true){
 		if(st != '')
-			var os = "ls:"+lat+"//"+lng+"//"+zoom+"//"+st+":";
+			var os = "ls:"+lat+"//"+lng+"//"+zoom+"//"+st+":"+ms;
 		else
-			var os = "ls:"+lat+"//"+lng+"//"+zoom+":";
+			var os = "ls:"+lat+"//"+lng+"//"+zoom+":"+ms;
 			} else {
-				var os = "ma:"+lat+"//"+lng+"//"+zoom+"//"+mt+":";
+				var os = "ma:"+lat+"//"+lng+"//"+zoom+"//"+mt+":"+ms;
 			}
 		
 		if(type == 'edit'){
