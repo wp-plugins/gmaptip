@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Add gMap Tooltip</title>
+<script type="text/javascript" src="../../../wp-includes/js/tinymce/tiny_mce_popup.js?ver=3241-1141"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="window.js"></script>
+<style>
+	#gmt_addMarkW {
+		position:absolute;
+		width:265px;
+		height:200px;
+		-moz-border-radius: 6px; 
+		-webkit-border-radius: 6px;
+		background-color:#FFF;
+		border: 1px solid #222;
+		padding:5px;
+		top: 60px;
+		left:40px;
+		z-index:5;
+	}
+</style>
+</head>
+<body onload="initialize()">
+<form>
+<label>Link Text: <input id="gmt_linktext" name="gmt_linktext" type="text" /></label><br />
+<label id="gmt_stl"><span style="color:#F00">*</span>Search Text: <input id="gmt_searchtext" name="gmt_searchtext" type="text" /></label><br />
+<label>Lat:<input id="gmt_lat" name="gmt_lat" type="text" style="width:56px"  /></label>
+<label>Long:<input id="gmt_long" name="gmt_long" type="text" style="width:56px" /></label>
+<label>Zoom:<input id="gmt_zoom" name="gmt_zoom" type="text" style="width:24px" maxlength="2" /></label>
+<input type="hidden" id="gmt_mt" name="gmt_mt" value="" />
+<input type="button" id="insert" value="Set Position" title="Set Current Map Position" onclick="setpos();" /><br />
+<label> Auto <input type="checkbox" id="gmt_auto" name="gmt_auto" title="Set the Position to the Viewers Current Position." value="1" /></label><br />
+<input type="submit" id="insert" name="insert"  value="Insert" onclick="insert_tip();" />
+<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
+</form>
+<p id="gmt_sth"><span style="color:#F00">*</span> Search Text is not required, if not set the Link text would be taken.</p>
+<div style="border:solid 1px #333; padding:2px; margin-top:5px;"><input type="text" id="address" name="address" value="New York" /><input type="button" id="insert" name="button" value="Search" onclick="geocode()"><input type="button" id="gmt_del_marks" name="button" value="Delete Marks" onclick="clearMarks();" style="cursor:pointer" /></div>
+<div id="map" style="width:440px;height:275px;margin-top:5px;"></div>
+<small style="font-size:10px; font-family:Georgia, 'Times New Roman', Times, serif">To add a Mark just klick on the map at the position.</small>
+<div id="gmt_addMarkW" style="display:none; font-size:12px">
+	<form>
+    	<label>Lat:&nbsp;&nbsp;<input id="gmt_addmark_lat" name="gmt_addmark_lat" type="text" style="width:56px"  /></label>
+		<label>Long:<input id="gmt_addmark_lng" name="gmt_addmark_lng" type="text" style="width:56px" /></label><br />
+        <label>Title: <input id="gmt_addmark_title" name="gmt_addmark_title" type="text" /></label><br />
+        <label>Custom Image URL<span style="color:#F00">*</span>: <input id="gmt_addmark_img" name="gmt_addmark_img" type="text" style="width:200px" /></label><br />
+      	<input type="button" id="gmt_addmark_submit" name="gmt_addmark_submit"  value="Insert" onclick="addMark();" style="cursor:pointer" />
+        <input type="button" id="gmt_addmark_cancel" name="gmt_addmark_cancel" value="{#cancel}" onclick="jQuery('#gmt_addMarkW').fadeOut('slow');" style="cursor:pointer"  />
+    </form>
+    <small style="font-size:10px"><span style="color:#F00">*</span>Custom Mark Image, should be a .png or .gif file. Anchor point is at the bottom.<br /><b>This Field is not required.</b></small>
+</div>
+</body>
+</html>
